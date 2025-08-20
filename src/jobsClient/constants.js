@@ -1,0 +1,22 @@
+export const USCities = [
+    "New York, NY",
+    "San Francisco, CA",
+    "Seattle, WA",
+    "Austin, TX",
+    "Boston, MA",
+    "Los Angeles, CA",
+    "Chicago, IL",
+    "Dallas, TX",
+    "Atlanta, GA",
+    "San Jose, CA",
+    "Denver, CO",
+    "Washington, DC",
+    "Houston, TX",
+    "Raleigh, NC",
+    "San Diego, CA",
+    "Portland, OR",
+    "Philadelphia, PA",
+    "Minneapolis, MN",
+    "Salt Lake City, UT",
+    "Pittsburgh, PA"
+]
