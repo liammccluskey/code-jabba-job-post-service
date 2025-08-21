@@ -49,36 +49,40 @@ const transformJobData = (jobData, location) => {
                 value: {
                     minValue: salaryMin = 0,
                     maxValue: salaryMax = 0,
+                    uniteText: salaryFrequency = 'YEAR',
                 } = {}
             } = {}
         },
         company,
         hasSalary=false,
-        minSalary,
     } = jobData
 
     const fullJobData = {
+        // Static fields - not overwritten by openai job data
         title,
         description,
-        skills,
         companyName: company,
         location,
-        employmentType: ['N/A', 'FlexTime'].includes(employmentType) ? 'fulltime' : employmentType,
         applicationType: 'custom',
         applicationURL: url,
         salaryType: (hasSalary && salaryMin && salaryMax) ? 'range' : 'not-provided',
         salaryMin: (hasSalary && salaryMin) ? Number(salaryMin) : 0,
         salaryMax: (hasSalary && salaryMax) ? Number(salaryMax) : 0,
+        salaryFrequency: (hasSalary && ['YEAR', 'HOUR', 'year', 'hour'].includes(salaryFrequency)) ? 
+            salaryFrequency.toLowerCase() : 'year'
+        ,
+        // Dynamic fields - overwritten by openai job data
+        employmentType: ['N/A', 'FlexTime'].includes(employmentType) ? 'fulltime' : employmentType,
     }
 
-    const openaiJobData = {
+    const openaiJobPayload = {
         title,
         description,
         skills,
         employmentType: fullJobData.employmentType,
     }
 
-    return {fullJobData, openaiJobData}
+    return {fullJobData, openaiJobPayload}
 }
 
 // fetch jobs from Job Data API
@@ -89,11 +93,12 @@ export const fetchJobs = async location => {
 
     try {
         const res = await axios.request(jobQueryOptions)
-    
-        const jobs = res.data.result
+        const jobs = res.data.result.map( job => transformJobData(job) )
 
         return jobs
     } catch (error) {
+        console.log('Failed to fetch jobs.')
         console.error(error)
+        throw error
     }
 }

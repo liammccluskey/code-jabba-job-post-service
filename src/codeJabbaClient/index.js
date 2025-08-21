@@ -9,24 +9,27 @@ export const CODE_JABBA_API_URL = {
 const codeJabbaApi = axios.create({
     baseURL:  CODE_JABBA_API_URL,
     headers: {
-        api_key: process.env.REACT_APP_HEROKU_API_KEY
+        api_key: process.env.CODE_JABBA_API_KEY
     }
 })
 
-export const postJob = async (openaiJobData, fullJobData) => {
+export const postJob = async (openaiJobData, fullJobData, location) => {
 
     const jobData = {
         ...fullJobData,
-        ...openaiJobData
+        ...openaiJobData,
+        location
     }
 
     try {
-        const res = codeJabbaApi.post('/jobs/job-post-service', {
-            companyName: 
+        const res = await codeJabbaApi.post('/jobs/job-post-service', {
+            job: jobData
         })
-
+        
+        return res
     } catch (error) {
         console.log('Failed to post job to Code Jabba.')
         console.log(error)
+        throw error
     }
 }
