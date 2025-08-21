@@ -98,7 +98,7 @@ export const fetchJobs = async location => {
         return jobs
     } catch (error) {
         console.log('Failed to fetch jobs.')
-        console.error(error)
+        console.log(error.message)
         throw error
     }
 }

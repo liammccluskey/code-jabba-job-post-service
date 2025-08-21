@@ -1,9 +1,9 @@
 import 'dotenv/config'
 import cron from 'node-cron'
-import { fetchJobs } from './src/jobsClient'
-import { extractJobData } from './src/openaiClient'
-import { postJob } from './src/codeJabbaClient'
-import {USCities} from './src/jobsClient/constants'
+import { fetchJobs } from './src/jobsClient/index.js'
+import { extractJobData } from './src/openaiClient/index.js'
+import { postJob } from './src/codeJabbaClient/index.js'
+import {USCities} from './src/jobsClient/constants.js'
 
 // Job runner arrow function
 const runJobServicePipeline = async () => {
@@ -11,16 +11,27 @@ const runJobServicePipeline = async () => {
         for (let i = 0; i < USCities.length; i++) {
             const location = USCities[i]
 
-            const jobs = await fetchJobs(location)
+            try {
+                console.log('fetching jobs for location: ' + location)
+                const jobs = await fetchJobs(location)
 
-            for (let j = 0; j < jobs.length; i++) {
-                const {openaiPayload, fullJobData} = jobs[j]
+                for (let j = 0; j < jobs.length; j++) {
+                    const {openaiJobPayload, fullJobData} = jobs[j]
 
-                const extractedJobData = await extractJobData(openaiPayload)
+                    try {
+                        const extractedJobData = await extractJobData(openaiJobPayload)
 
-                const postedJob = await postJob(extractJobData, fullJobData)
+                        const postedJob = await postJob(extractedJobData, fullJobData, location)
 
-                console.log(postedJob.data.message)
+                        console.log('   ' + postedJob.data.message + ' for location: ' + location)
+                    } catch (error) {
+                        console.log('   Failed to post job with title: ' + openaiJobPayload.title)
+                        console.log(error.message)
+                    }
+                }
+            } catch (error) {
+                console.log('Failed to fetch jobs for location: ' + location)
+                console.log(error.message)
             }
         }
 
@@ -39,4 +50,6 @@ const runJobServicePipeline = async () => {
 // })
 
 // Run immediately on startup (optional)
-runJobPipeline()
+runJobServicePipeline()
+
+
