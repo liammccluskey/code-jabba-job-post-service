@@ -32,7 +32,18 @@ export const postJob = async (openaiJobData, fullJobData, location) => {
         return res
     } catch (error) {
         console.log('Failed to post job to Code Jabba.')
-        console.log(error.message)
+        console.log(error)
         throw error
+    }
+}
+
+export const archiveExpiredJobs = async () => {
+    try {
+        const res = await codeJabbaApi.patch('/jobs/job-archive-service')
+
+        console.log(res.data.message)
+    } catch (error) {
+        console.log('Failed to archive expired jobs.')
+        console.log(error)
     }
 }

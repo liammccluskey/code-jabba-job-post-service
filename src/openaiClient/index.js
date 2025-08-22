@@ -16,7 +16,6 @@ const systemPrompt = `
     - experienceLevel: one of the following options ( entry, mid, senior, staff, principal ). Use the "title" and "description" field you receive to determine this field. Note that the string value you choose/return should be written/spelled exactly as it is in the input options you are given.
     - skills: send an array containing one or more of the following options [${Skills}]. This field refers to the coding skills necessary for the job, and you should use the "description" and "skills" field you receive to determine the content of this array field. Note that the items you send in this array should be written/spelled exactly as they are in the input options you receive.
     - languages: send an array containing one or more of the following options [${Languages}]. This field refers to the coding languages necessary for the job, and you should use the "description" and "skills" field you receive to determine the content of this array field. Note that the items you send in this array should be written/spelled exactly as they are in the input options you receive.
-
 `
 
 const enrichJobData = openaiJobData => {
@@ -66,7 +65,7 @@ export const extractJobData = async inputJobData => {
         return enrichedJobData
     } catch (error) {
         console.log('Failed to extract job data from oopenai api.')
-        console.log(error.message)
+        console.log(error)
         throw error
     }
 }
