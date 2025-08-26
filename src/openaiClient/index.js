@@ -14,13 +14,16 @@ const systemPrompt = `
     - employmentType: one of the following options ( full-time, contract, part-time, internship ). Use the "description" and "employmentType" field you receive to determine this field. You should override the value given in the "employmentType" field you receive to fit one of the given input options. Note that the string value you choose/return should be written/spelled exactly as it is in the input options you are given.
     - setting: one of the following options ( on-site, remote, hybrid ). Use the "title" and "description" field you receive to determine this field. Note that the string value you choose/return should be written/spelled exactly as it is in the input options you are given.
     - experienceLevel: one of the following options ( entry, mid, senior, staff, principal ). Use the "title" and "description" field you receive to determine this field. Note that the string value you choose/return should be written/spelled exactly as it is in the input options you are given.
-    - skills: send an array containing one or more of the following options [${Skills}]. This field refers to the coding skills necessary for the job, and you should use the "description" and "skills" field you receive to determine the content of this array field. Note that the items you send in this array should be written/spelled exactly as they are in the input options you receive.
-    - languages: send an array containing one or more of the following options [${Languages}]. This field refers to the coding languages necessary for the job, and you should use the "description" and "skills" field you receive to determine the content of this array field. Note that the items you send in this array should be written/spelled exactly as they are in the input options you receive.
+    - skills: send an array containing one or more of the following options [${Skills}]. This field refers to the coding skills necessary for the job, and you should use the "description" and "skills" field you receive to determine the content of this array field. If you find a a skill item listed in the "skills" field that is not listed in the input options you must remove it from the list of skills you return. Note that the items you send in this array should be written/spelled exactly as they are in the input options you receive.
+    - languages: send an array containing one or more of the following options [${Languages}]. This field refers to the coding languages necessary for the job, and you should use the "description" and "skills" field you receive to determine the content of this array field. If you find a coding language listed in the "skills" array that is not listed in the input options you must remove it from the array of languages you return. Note that the items you send in this array should be written/spelled exactly as they are in the input options you receive.
+    - requiresClearance: send a boolean value ( true OR false ) that signifies whether or not the job requires a security clearance. You should use the "description" field you receive to determine this field, returning "true" if it requires a security clearance and "false" if it does not. Return true if the description includes or implies security clearance requirements or mentions any of the following phrases/words ("must have security clearance", "ability to obtain clearance", "eligible for clearance", "active clearance preferred", "SECRET", "Top Secret", "Public Trust", "Confidential") otherwise return false.
+
 `
 
 const enrichJobData = openaiJobData => {
     const ret = {...openaiJobData}
     const {experienceLevel} = ret
+    let hadValidExperienceLevel = true
 
     switch (experienceLevel) {
         case 'entry':
@@ -38,10 +41,31 @@ const enrichJobData = openaiJobData => {
         case 'principal':
             ret.experienceYears = ['6']
             break
+        default:
+            hadValidExperienceLevel = false
+            break
     }
 
-    delete ret.experienceLevel
-    ret.experienceLevels = [experienceLevel]
+    if (hadValidExperienceLevel) {
+        delete ret.experienceLevel
+        ret.experienceLevels = [experienceLevel]
+    } else {
+        ret.experienceYears = ['2', '3']
+        ret.experienceLevels = ['mid']
+    }
+
+    const {position, employmentType, setting, languages, skills, requiresClearance} = ret
+    const validPositions = ['frontend', 'backend', 'full-stack', 'embedded', 'quality-analysis', 'test']
+    const validEmploymentTypes = ['full-time', 'contract', 'part-time', 'internship']
+    const validSettings = ['on-site', 'hybrid', 'remote']
+    const validSecurityClearanceOptions = ['true', true, 'false', false]
+    
+    if (!validPositions.includes(position)) ret.position = 'full-stack'
+    if (!validEmploymentTypes.includes(employmentType)) ret.employmentType = 'full-time'
+    if (!validSettings.includes(setting)) ret.setting = 'on-site'
+    if (!Array.isArray(languages)) ret.languages = []
+    if (!Array.isArray(skills)) ret.skills = []
+    if (!validSecurityClearanceOptions.includes(requiresClearance)) ret.requiresClearance = false
 
     return ret
 }
@@ -64,7 +88,7 @@ export const extractJobData = async inputJobData => {
     
         return enrichedJobData
     } catch (error) {
-        console.log('Failed to extract job data from oopenai api.')
+        console.log('Failed to extract job data from openai api.')
         console.log(error)
         throw error
     }

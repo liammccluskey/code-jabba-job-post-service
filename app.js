@@ -38,10 +38,10 @@ const runJobServicePipeline = async () => {
                         console.log('   Failed to post job with title: ' + openaiJobPayload.title)
                         console.log(error)
                     } finally {
-                        sleep(2)
+                        await sleep(2)
                     }
                 }
-                sleep(2)
+                await sleep(2)
             } catch (error) {
                 console.log('Failed to fetch jobs for location: ' + location)
                 console.log(error)

@@ -20,7 +20,6 @@ export const postJob = async (openaiJobData, fullJobData, location) => {
         ...openaiJobData,
         location,
         sponsorsVisa: 'visa-possibly',
-        requiresClearance: false,
         archive: true,
     }
 

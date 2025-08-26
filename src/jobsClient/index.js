@@ -49,7 +49,7 @@ const transformJobData = (jobData, location) => {
                 value: {
                     minValue: salaryMin = 0,
                     maxValue: salaryMax = 0,
-                    uniteText: salaryFrequency = 'YEAR',
+                    unitText: salaryFrequency = 'YEAR',
                 } = {}
             } = {}
         },
