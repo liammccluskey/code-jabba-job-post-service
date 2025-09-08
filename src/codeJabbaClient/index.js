@@ -31,7 +31,7 @@ export const postJob = async (openaiJobData, fullJobData, location) => {
         return res
     } catch (error) {
         console.log('Failed to post job to Code Jabba.')
-        console.log(error)
+        console.log(error.response.data.message)
         throw error
     }
 }

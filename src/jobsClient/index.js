@@ -33,7 +33,8 @@ const getJobQueryOptions = city => ({
     headers: {
         'x-rapidapi-key': process.env.JOB_API_KEY,
         'x-rapidapi-host': process.env.JOB_API_HOST
-    }
+    },
+    timeout: 30*1000
 })
 
 // Transform data object structure to more concise format for sending to openai api
@@ -98,7 +99,10 @@ export const fetchJobs = async location => {
         return jobs
     } catch (error) {
         console.log('Failed to fetch jobs.')
-        console.log(error)
+        const errorMessage = error.response && error.response.data ? 
+            error.response.data.message
+            : error.message
+        console.log(errorMessage)
         throw error
     }
 }

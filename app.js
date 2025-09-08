@@ -36,7 +36,10 @@ const runJobServicePipeline = async () => {
                         console.log('   ' + postedJob.data.message + ' for location: ' + location)
                     } catch (error) {
                         console.log('   Failed to post job with title: ' + openaiJobPayload.title)
-                        console.log(error)
+                        const errorMessage = error.response && error.response.data ? 
+                            error.response.data.message
+                            : error.message
+                        console.log(errorMessage)
                     } finally {
                         await sleep(2)
                     }
@@ -56,18 +59,13 @@ const runJobServicePipeline = async () => {
     }
 }
 
-// // Schedule job to run every day at 1 AM EST
-// cron.schedule('0 1 * * *', () => {
-//     runJobPipeline()
-//     archiveExpiredJobs()
-// }, {
-//     scheduled: true,
-//     timezone: 'America/New_York'
-// })
-
-// Run immediately on startup (optional)
-runJobServicePipeline()
-
-// archiveExpiredJobs()
+// Schedule job to run every day at 1 AM EST
+cron.schedule('0 1 * * *', () => {
+    runJobPipeline()
+    archiveExpiredJobs()
+}, {
+    scheduled: true,
+    timezone: 'America/New_York'
+})
 
 

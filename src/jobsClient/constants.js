@@ -1,22 +1,38 @@
-export const USCities = [
-    "New York, NY",
+const USCities = [
     "San Francisco, CA",
-    "Seattle, WA",
-    "Austin, TX",
-    "Boston, MA",
-    "Los Angeles, CA",
-    "Chicago, IL",
-    "Dallas, TX",
-    "Atlanta, GA",
     "San Jose, CA",
-    "Denver, CO",
-    "Washington, DC",
+    "Seattle, WA",
+    "New York, NY",
+    "Boston, MA",
+    "Austin, TX",
+    "Dallas, TX",
     "Houston, TX",
-    "Raleigh, NC",
+    "Los Angeles, CA",
     "San Diego, CA",
+    "Denver, CO",
+    "Boulder, CO",
+    "Chicago, IL",
+    "Atlanta, GA",
+    "Washington, DC",
+    "Arlington, VA",
     "Portland, OR",
+    "Raleigh, NC",
+    "Durham, NC",
+    "Charlotte, NC",
+    "Pittsburgh, PA",
     "Philadelphia, PA",
+    "Jersey City, NJ",
+    "Newark, NJ",
     "Minneapolis, MN",
     "Salt Lake City, UT",
-    "Pittsburgh, PA"
+    "Phoenix, AZ",
+    "Scottsdale, AZ",
+    "Miami, FL",
+    "Tampa, FL",
+    "Orlando, FL",
+    "Nashville, TN"
 ]
+
+module.exports = {
+    USCities
+}
