@@ -17,7 +17,8 @@ export const Languages = [
     'Golang',
     'Perl',
     'Rust',
-    'R'
+    'R',
+    'Matlab'
 ]
 
 export const Skills = [
