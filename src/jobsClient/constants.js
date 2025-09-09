@@ -1,4 +1,4 @@
-const USCities = [
+export const USCities = [
     "San Francisco, CA",
     "San Jose, CA",
     "Seattle, WA",
@@ -32,7 +32,3 @@ const USCities = [
     "Orlando, FL",
     "Nashville, TN"
 ]
-
-module.exports = {
-    USCities
-}

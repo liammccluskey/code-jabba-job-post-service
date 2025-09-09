@@ -60,8 +60,8 @@ const runJobServicePipeline = async () => {
 }
 
 // Schedule job to run every day at 1 AM EST
-cron.schedule('0 1 * * *', () => {
-    runJobPipeline()
+cron.schedule('0 0 1 * * *', () => {
+    runJobServicePipeline()
     archiveExpiredJobs()
 }, {
     scheduled: true,
